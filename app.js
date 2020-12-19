@@ -35,6 +35,23 @@ app.get('/exportjson', async (req, res) => {
     }
 })
 
+app.get('/exportAllCollections', async (req, res) => {
+    try {
+        const collectionReferences = await db.listCollections();
+        for (collection of collectionReferences) {
+            await exportCollectionDocumentsInJSON(collection.id);
+        }
+        res.send('Success!!!');
+    } catch (err) {
+        console.log('err........', err);
+        res.send(err);
+    }
+})
+
+/**
+ * 
+ * @param {*} collectionName: string
+ */
 
 async function exportCollectionDocumentsInJSON(collectionName) {
     const snapshot = await db.collection(`${collectionName}`).get()
