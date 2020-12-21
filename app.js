@@ -15,23 +15,18 @@ app.get('/', (req, res) => {
     res.send('root')
 })
 
-app.get('/exportjson', async (req, res) => {
-    try {
-       await exportCollectionDocumentsInJSON('users');
-       await exportCollectionDocumentsInJSON('body_parts');
-       await exportCollectionDocumentsInJSON('clinical_examination');
-       await exportCollectionDocumentsInJSON('complains');
-       await exportCollectionDocumentsInJSON('medication');
-       await exportCollectionDocumentsInJSON('other_investigation');
-       await exportCollectionDocumentsInJSON('pathology_investigation');
-       await exportCollectionDocumentsInJSON('provisional_diagnosis');
-       await exportCollectionDocumentsInJSON('radiology_investigation');
-       await exportCollectionDocumentsInJSON('signs');
-       await exportCollectionDocumentsInJSON('symptoms');
-       res.send('Success!!!');
-    } catch (err) {
-        console.log('err........', err);
-        res.send(err);
+app.get('/exportParticularCollection', async (req, res) => {
+    console.log('req.query', req.query);
+    if (req.query.collectionName) {
+        try {
+            await exportCollectionDocumentsInJSON(`${req.query.collectionName}`);
+            res.send('Success!!!');
+         } catch (err) {
+             console.log('err........', err);
+             res.send(err);
+         }
+    } else {
+        res.send('collectionName Required as query parameter!');
     }
 })
 
